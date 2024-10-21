@@ -12,6 +12,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Serve static files (like index.html, style.css)
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+// Define a simple route
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  });
+
 // POST route to handle form submission and save data to Excel
 app.post('/save-search-data', async (req, res) => {
     const { destination, date, guests } = req.body;
@@ -40,9 +46,12 @@ app.post('/save-search-data', async (req, res) => {
     res.redirect('/'); // Redirect back to the homepage after submission
 });
 
-// Start the server
-const port = 3000;
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
+// Use the PORT environment variable or default to 4000
+const PORT = process.env.PORT || 4000;
+
+// Bind the server to host '0.0.0.0' and the assigned port
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on port ${PORT}`);
 });
+
 console.log('Serving static files from:', path.join(__dirname, 'public'));
