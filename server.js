@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
 const ExcelJS = require('exceljs');
 const app = express();
 
@@ -8,10 +9,25 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Define a route to fetch Excel data
 app.get('/get-data', async (req, res) => {
-    const workbook = new ExcelJS.Workbook();
     const filePath = path.join(__dirname, 'SearchData.xlsx');
     
+    // Check if the file exists, if not, create an empty file
+    if (!fs.existsSync(filePath)) {
+        try {
+            // Create a new Excel workbook and add a worksheet with a header row
+            const workbook = new ExcelJS.Workbook();
+            const worksheet = workbook.addWorksheet('Search Data');
+            worksheet.addRow(['Destination', 'Date', 'Guests']);
+            await workbook.xlsx.writeFile(filePath);
+        } catch (error) {
+            console.error("Error creating Excel file:", error);
+            return res.status(500).send("Could not create Excel file");
+        }
+    }
+
+    // Read and parse the existing Excel file
     try {
+        const workbook = new ExcelJS.Workbook();
         await workbook.xlsx.readFile(filePath);
         const worksheet = workbook.getWorksheet(1);
 
@@ -41,6 +57,6 @@ app.get('/', (req, res) => {
 
 // Dynamic PORT for Render
 const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
 });
