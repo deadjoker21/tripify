@@ -18,7 +18,7 @@
                     <li><a href="#">Home</a></li>
                     <li><a href="#">Destinations</a></li>
                     <li><a href="#">Offers</a></li>
-                    <li><a href="#">Contact</a></li>
+                    <li><a href="#" id="contactButton">Contact</a></li>
                 </ul>
             </nav>
         </div>
@@ -37,17 +37,17 @@
         </div>
     </section>
 
-    <!-- Featured Cities -->
-    <div class="featured-cities">
-        <div class="city-item" style="background-image: url('newyork.jpg');">
-            <h3>New York</h3>
-        </div>
-        <div class="city-item" style="background-image: url('paris.jpg');">
-            <h3>Paris</h3>
-        </div>
-        <div class="city-item" style="background-image: url('tokyo.jpg');">
-            <h3>Tokyo</h3>
-        </div>
+    <!-- Password Prompt and Data Display Section -->
+    <div id="passwordSection" style="display: none;">
+        <h2>Enter Password to View Data</h2>
+        <input type="password" id="passwordInput" placeholder="Password">
+        <button id="submitPassword">Submit</button>
+        <p id="passwordError" style="color: red; display: none;">Incorrect Password</p>
+    </div>
+
+    <div id="dataSection" style="display: none;">
+        <h2>Real-Time Data</h2>
+        <div id="dataDisplay"></div>
     </div>
 
     <!-- Footer -->
@@ -63,19 +63,35 @@
 
     <!-- JavaScript -->
     <script>
-        // Intersection Observer for scroll-triggered fade-in
-        const observer = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible'); // Add class to fade in
-                    observer.unobserve(entry.target); // Stop observing once faded in
-                }
-            });
-        }, { threshold: 0.1 }); // Trigger when 10% of the element is visible
+        // Show the password prompt when "Contact" button is clicked
+        document.getElementById('contactButton').addEventListener('click', () => {
+            document.getElementById('passwordSection').style.display = 'block';
+        });
 
-        // Apply the observer to each city item
-        document.querySelectorAll('.city-item').forEach(item => {
-            observer.observe(item);
+        // Handle password submission
+        document.getElementById('submitPassword').addEventListener('click', async () => {
+            const password = document.getElementById('passwordInput').value;
+            const correctPassword = 'securepassword'; // Change this to your secure password
+
+            if (password === correctPassword) {
+                document.getElementById('passwordError').style.display = 'none';
+                document.getElementById('passwordSection').style.display = 'none';
+                document.getElementById('dataSection').style.display = 'block';
+
+                // Fetch and display the data
+                const response = await fetch('/get-data');
+                const data = await response.json();
+
+                // Display the fetched data in a table
+                let html = '<table border="1"><tr><th>Destination</th><th>Date</th><th>Guests</th></tr>';
+                data.forEach(row => {
+                    html += `<tr><td>${row.destination}</td><td>${row.date}</td><td>${row.guests}</td></tr>`;
+                });
+                html += '</table>';
+                document.getElementById('dataDisplay').innerHTML = html;
+            } else {
+                document.getElementById('passwordError').style.display = 'block';
+            }
         });
     </script>
 </body>
