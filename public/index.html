@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Booking Search</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="#">Tripify</a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Destinations</a></li>
+                    <li><a href="#">Offers</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Search Form -->
+    <section class="search-section">
+        <div class="search-container">
+            <h1>Search for Flights</h1>
+            <form id="searchForm" action="/save-search-data" method="POST">
+                <input type="text" id="destination" name="destination" placeholder="Destination" required>
+                <input type="date" id="date" name="date" required>
+                <input type="number" id="guests" name="guests" placeholder="Guests" min="1" required>
+                <button type="submit">Search</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Featured Cities -->
+    <div class="featured-cities">
+        <div class="city-item" style="background-image: url('newyork.jpg');">
+            <h3>New York</h3>
+        </div>
+        <div class="city-item" style="background-image: url('paris.jpg');">
+            <h3>Paris</h3>
+        </div>
+        <div class="city-item" style="background-image: url('tokyo.jpg');">
+            <h3>Tokyo</h3>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Tripify. All rights reserved.</p>
+            <ul>
+                <li><a href="#">Terms of Service</a></li>
+                <li><a href="#">Privacy Policy</a></li>
+            </ul>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Intersection Observer for scroll-triggered fade-in
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible'); // Add class to fade in
+                    observer.unobserve(entry.target); // Stop observing once faded in
+                }
+            });
+        }, { threshold: 0.1 }); // Trigger when 10% of the element is visible
+
+        // Apply the observer to each city item
+        document.querySelectorAll('.city-item').forEach(item => {
+            observer.observe(item);
+        });
+    </script>
+</body>
+</html>
