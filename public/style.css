@@ -10,6 +10,7 @@ body {
     display: flex;
     justify-content: space-between; /* This will push the logo to the left and the nav to the right */
     align-items: center; /* Vertically centers items */
+    padding: 1200px
 }
 
 header {
@@ -28,7 +29,7 @@ header .logo a {
 nav ul {
     list-style-type: none;
     margin: 0;
-    padding: 20px;
+    padding: 0;
     display: flex;
     justify-content: flex-end; /* Align the items to the right */
 }
