@@ -28,7 +28,7 @@ header .logo a {
 nav ul {
     list-style-type: none;
     margin: 0;
-    padding: 0;
+    padding: 20px;
     display: flex;
     justify-content: flex-end; /* Align the items to the right */
 }
