@@ -1,27 +1,53 @@
 const express = require('express');
 const { Storage } = require('@google-cloud/storage');
 const ExcelJS = require('exceljs');
+const fs = require('fs');
+const path = require('path');
+
 const app = express();
 
-// Create a Google Cloud Storage client
+// Log environment variable details for debugging
+console.log('GOOGLE_CLOUD_PROJECT:', process.env.GOOGLE_CLOUD_PROJECT);
+console.log('GOOGLE_CLOUD_BUCKET:', process.env.GOOGLE_CLOUD_BUCKET);
+console.log('GOOGLE_CLOUD_CLIENT_EMAIL:', process.env.GOOGLE_CLOUD_CLIENT_EMAIL);
+console.log('GOOGLE_CLOUD_PRIVATE_KEY:', process.env.GOOGLE_CLOUD_PRIVATE_KEY ? 'Loaded successfully' : 'Undefined or missing');
+
+// Check if GOOGLE_CLOUD_PRIVATE_KEY is available
+if (!process.env.GOOGLE_CLOUD_PRIVATE_KEY) {
+  console.error('ERROR: GOOGLE_CLOUD_PRIVATE_KEY is missing.');
+}
+
+// Initialize Google Cloud Storage with credentials
 const storage = new Storage({
   projectId: process.env.GOOGLE_CLOUD_PROJECT,
   credentials: {
     client_email: process.env.GOOGLE_CLOUD_CLIENT_EMAIL,
-    private_key: process.env.GOOGLE_CLOUD_PRIVATE_KEY.replace(/\\n/g, '\n'),  // Ensure newlines are properly formatted
+    private_key: process.env.GOOGLE_CLOUD_PRIVATE_KEY
+      ? process.env.GOOGLE_CLOUD_PRIVATE_KEY.replace(/\\n/g, '\n')
+      : 'MISSING_PRIVATE_KEY',
   },
 });
-// Name of your bucket and file
-const bucketName = process.env.GOOGLE_CLOUD_BUCKET;
-const bucket = storage.bucket(bucketName);
-const fileName = 'SearchData.xlsx'; // Name of your Excel file in the bucket
 
-// GET /get-data endpoint to fetch and process the Excel file from Google Cloud Storage
+// Define your bucket and file
+const bucketName = process.env.GOOGLE_CLOUD_BUCKET;
+const fileName = 'SearchData.xlsx'; // Change to your actual file
+
+// Route to fetch Excel data from Google Cloud Storage
 app.get('/get-data', async (req, res) => {
   try {
-    // Download the Excel file from Google Cloud Storage to a local temporary path
-    const tempFilePath = `/tmp/${fileName}`;
-    await bucket.file(fileName).download({ destination: tempFilePath });
+    console.log('Starting to process /get-data request...');
+
+    // Log bucket and file details
+    console.log(`Bucket: ${bucketName}, File: ${fileName}`);
+
+    // Temporary local path to store the downloaded file
+    const tempFilePath = path.join('/tmp', fileName);
+    console.log(`Temp file path: ${tempFilePath}`);
+
+    // Download the file from Google Cloud Storage
+    await storage.bucket(bucketName).file(fileName).download({
+      destination: tempFilePath,
+    });
     console.log(`${fileName} downloaded successfully to ${tempFilePath}`);
 
     // Read the Excel file using ExcelJS
@@ -29,10 +55,10 @@ app.get('/get-data', async (req, res) => {
     await workbook.xlsx.readFile(tempFilePath);
     const worksheet = workbook.getWorksheet(1);
 
-    // Process the data from the worksheet
+    // Process data from worksheet
     const data = [];
     worksheet.eachRow((row, rowNumber) => {
-      if (rowNumber > 1) {
+      if (rowNumber > 1) { // Skip the header row
         data.push({
           destination: row.getCell(1).value,
           date: row.getCell(2).value,
@@ -40,52 +66,27 @@ app.get('/get-data', async (req, res) => {
         });
       }
     });
+    console.log('Data processed successfully:', data);
 
-    app.get('/get-data', async (req, res) => {
-  try {
-    console.log('Attempting to download SearchData.xlsx from Google Cloud Storage...');
-    
-    // Ensure you're using the correct file path
-    const tempFilePath = `/tmp/SearchData.xlsx`;
-    await bucket.file('SearchData.xlsx').download({ destination: tempFilePath });
-    console.log('File downloaded successfully to:', tempFilePath);
-
-    // Use ExcelJS to read the Excel file
-    const workbook = new ExcelJS.Workbook();
-    await workbook.xlsx.readFile(tempFilePath);
-    const worksheet = workbook.getWorksheet(1);
-
-    // Process data
-    const data = [];
-    worksheet.eachRow((row, rowNumber) => {
-      if (rowNumber > 1) {
-        data.push({
-          destination: row.getCell(1).value,
-          date: row.getCell(2).value,
-          guests: row.getCell(3).value,
-        });
-      }
-    });
-
-    console.log('Successfully processed Excel data:', data);
+    // Send the data as JSON response
     res.json(data);
 
+    // Clean up the temp file
+    fs.unlinkSync(tempFilePath);
+    console.log('Temporary file deleted successfully');
   } catch (error) {
-    console.error('Error in /get-data endpoint:', error.message);
-    res.status(500).send('Error fetching data');
+    console.error('Error in /get-data function:', error.message);
+    res.status(500).send('Error processing request');
   }
 });
 
-    // Send the data as a JSON response
-    res.json(data);
-  } catch (error) {
-    console.error('Error fetching data:', error);
-    res.status(500).send('Error fetching data');
-  }
+// Default route to check if the server is running
+app.get('/', (req, res) => {
+  res.send('Hello, World! This server is running.');
 });
 
 // Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
