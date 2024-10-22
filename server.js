@@ -9,6 +9,9 @@ app.use(express.json()); // To parse JSON bodies
 // Password for viewing the data (Change this to your actual password)
 const correctPassword = 'securepassword'; 
 
+app.use(express.static(path.join(__dirname, 'public')));
+
+
 // Route to fetch Excel data if the password is correct
 app.post('/get-data', async (req, res) => {
     const { password } = req.body;
