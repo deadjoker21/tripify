@@ -8,8 +8,11 @@ const app = express();
 
 // Create a Google Cloud Storage client
 const storage = new Storage({
-  projectId: process.env.GOOGLE_CLOUD_PROJECT,  // Use your Google Cloud Project ID
-  keyFilename: './path-to-your-json-key.json',  // Path to your credentials file (for local dev)
+  projectId: process.env.GOOGLE_CLOUD_PROJECT,
+  credentials: {
+    client_email: process.env.GOOGLE_CLOUD_CLIENT_EMAIL,
+    private_key: process.env.GOOGLE_CLOUD_PRIVATE_KEY.replace(/\\n/g, '\n'),  // Replace \n with actual newlines
+  },
 });
 
 // Define your bucket name
@@ -24,15 +27,17 @@ if (!fs.existsSync(path.join(__dirname, 'tmp'))) {
   fs.mkdirSync(path.join(__dirname, 'tmp'));
 }
 
-// Download Excel file from Google Cloud Storage
+// Download Excel file from Google Cloud Storage with logging
 const downloadExcelFileFromGCS = async () => {
   try {
+    console.log('Downloading SearchData.xlsx from bucket:', bucketName);
     await bucket.file('SearchData.xlsx').download({
       destination: tempFilePath,
     });
     console.log('SearchData.xlsx downloaded successfully.');
   } catch (error) {
-    console.error('Error downloading file from GCS:', error);
+    console.error('Error downloading file from GCS:', error.message);
+    throw error;
   }
 };
 
@@ -62,10 +67,10 @@ app.get('/get-data', async (req, res) => {
     // Send the extracted data as a JSON response
     res.json(data);
 
-    // Clean up the local file after reading it (optional)
+    // Clean up the local file after reading it
     fs.unlinkSync(tempFilePath);
   } catch (error) {
-    console.error('Error processing the Excel file:', error);
+    console.error('Error processing the Excel file:', error.message);
     res.status(500).send('Could not read Excel file');
   }
 });
