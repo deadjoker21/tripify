@@ -22,6 +22,11 @@ const storage = new Storage({
 const bucketName = 'your-bucket-name';
 const fileName = 'SearchData.xlsx';
 
+// Root route for the base URL
+app.get('/', (req, res) => {
+  res.send('Hello, World! The server is running.');
+});
+
 // Route to fetch Excel data from Google Cloud Storage
 app.get('/get-data', async (req, res) => {
   try {
