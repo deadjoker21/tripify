@@ -10,21 +10,28 @@ const app = express();
 console.log('GOOGLE_CLOUD_PROJECT:', process.env.GOOGLE_CLOUD_PROJECT);
 console.log('GOOGLE_CLOUD_BUCKET:', process.env.GOOGLE_CLOUD_BUCKET);
 console.log('GOOGLE_CLOUD_CLIENT_EMAIL:', process.env.GOOGLE_CLOUD_CLIENT_EMAIL);
-console.log('GOOGLE_CLOUD_PRIVATE_KEY:', process.env.GOOGLE_CLOUD_PRIVATE_KEY ? 'Loaded successfully' : 'Undefined or missing');
 
-// Check if GOOGLE_CLOUD_PRIVATE_KEY is available
+// Ensure private key is being loaded
 if (!process.env.GOOGLE_CLOUD_PRIVATE_KEY) {
   console.error('ERROR: GOOGLE_CLOUD_PRIVATE_KEY is missing.');
+} else {
+  console.log('Private key loaded');
 }
 
 // Initialize Google Cloud Storage with credentials
+let privateKey;
+try {
+  privateKey = process.env.GOOGLE_CLOUD_PRIVATE_KEY.replace(/\\n/g, '\n');
+  console.log('Private key formatted correctly.');
+} catch (error) {
+  console.error('Error formatting private key:', error.message);
+}
+
 const storage = new Storage({
   projectId: process.env.GOOGLE_CLOUD_PROJECT,
   credentials: {
     client_email: process.env.GOOGLE_CLOUD_CLIENT_EMAIL,
-    private_key: process.env.GOOGLE_CLOUD_PRIVATE_KEY
-      ? process.env.GOOGLE_CLOUD_PRIVATE_KEY.replace(/\\n/g, '\n')
-      : 'MISSING_PRIVATE_KEY',
+    private_key: privateKey,
   },
 });
 
