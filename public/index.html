@@ -39,15 +39,14 @@
 
 
 
-        <!-- Featured Cities -->
     <div class="featured-cities">
-        <div class="city-item" style="background-image: url('newyork.jpg');">
+        <div class="city-item" style="background-image: url('images/newyork.jpg');">
             <h3>New York</h3>
         </div>
-        <div class="city-item" style="background-image: url('paris.jpg');">
+        <div class="city-item" style="background-image: url('images/paris.jpg');">
             <h3>Paris</h3>
         </div>
-        <div class="city-item" style="background-image: url('tokyo.jpg');">
+        <div class="city-item" style="background-image: url('images/tokyo.jpg');">
             <h3>Tokyo</h3>
         </div>
     </div>
@@ -108,6 +107,24 @@
                 document.getElementById('passwordError').style.display = 'block';
             }
         });
+
+
+        const observer = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible'); // Add class to fade in
+            observer.unobserve(entry.target); // Stop observing once faded in
+        }
+    });
+}, { threshold: 0.1 }); // Trigger when 10% of the element is visible
+
+// Apply the observer to each city item
+document.querySelectorAll('.city-item').forEach(item => {
+    observer.observe(item);
+});
     </script>
+
+
+    
 </body>
 </html>
