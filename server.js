@@ -12,7 +12,7 @@ console.log("Starting the server...");
 // Test if the route is being accessed
 app.get('/get-data', async (req, res) => {
   console.log('GET /get-data endpoint accessed');
-
+  
   try {
     // Add log to indicate attempt to download the file
     console.log('Attempting to download SearchData.xlsx from Google Cloud Storage...');
