@@ -2,7 +2,7 @@
   "name": "website",
   "version": "1.0.0",
   "description": "Your project description",
-  "main": "server.js",  // Entry point
+  "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
