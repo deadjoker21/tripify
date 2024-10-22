@@ -17,7 +17,7 @@ app.post('/get-data', async (req, res) => {
         return res.status(403).json({ error: 'Invalid password' });
     }
 
-    const filePath = path.join(__dirname, 'public', 'SearchData.xlsx');
+    const filePath = path.join(__dirname, 'public', 'SearchDatas.xlsx');
 
     // Check if the file exists
     if (!fs.existsSync(filePath)) {
