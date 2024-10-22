@@ -18,7 +18,6 @@ if (!process.env.GOOGLE_CLOUD_PRIVATE_KEY) {
   console.log('Private key loaded');
 }
 
-// Initialize Google Cloud Storage with credentials
 let privateKey;
 try {
   privateKey = process.env.GOOGLE_CLOUD_PRIVATE_KEY.replace(/\\n/g, '\n');
