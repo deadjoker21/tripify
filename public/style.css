@@ -10,7 +10,10 @@ body {
     display: flex;
     justify-content: space-between; /* This will push the logo to the left and the nav to the right */
     align-items: center; /* Vertically centers items */
-    padding: 1200px
+    max-width: 1200px; /* Limit maximum width for large screens */
+    margin: 0 auto; /* Center the container horizontally */
+    padding: 0 20px; /* Add some padding to prevent collision with the screen sides */
+}
 }
 
 header {
