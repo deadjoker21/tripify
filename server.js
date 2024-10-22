@@ -22,6 +22,9 @@ const storage = new Storage({
 const bucketName = 'your-bucket-name';
 const fileName = 'SearchData.xlsx';
 
+
+console.log('Server Time:', new Date().toISOString());
+
 // Root route for the base URL
 app.get('/', (req, res) => {
   res.send('Hello, World! The server is running.');
