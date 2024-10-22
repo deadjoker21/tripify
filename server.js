@@ -3,15 +3,14 @@ const { Storage } = require('@google-cloud/storage');
 const ExcelJS = require('exceljs');
 const app = express();
 
-// Google Cloud Storage setup
+// Create a Google Cloud Storage client
 const storage = new Storage({
   projectId: process.env.GOOGLE_CLOUD_PROJECT,
   credentials: {
     client_email: process.env.GOOGLE_CLOUD_CLIENT_EMAIL,
-    private_key: process.env.GOOGLE_CLOUD_PRIVATE_KEY.replace(/\\n/g, '\n'),
+    private_key: process.env.GOOGLE_CLOUD_PRIVATE_KEY.replace(/\\n/g, '\n'),  // Ensure newlines are properly formatted
   },
 });
-
 // Name of your bucket and file
 const bucketName = process.env.GOOGLE_CLOUD_BUCKET;
 const bucket = storage.bucket(bucketName);
