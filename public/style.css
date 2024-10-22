@@ -7,9 +7,9 @@ body {
 }
 
 .container {
-    width: 90%;
-    margin: 0 auto;
-    max-width: 1200px; /* Sets a max width for larger screens */
+    display: flex;
+    justify-content: space-between; /* This will push the logo to the left and the nav to the right */
+    align-items: center; /* Vertically centers items */
 }
 
 header {
@@ -24,19 +24,22 @@ header .logo a {
     text-decoration: none;
 }
 
+/* Navigation styling */
 nav ul {
     list-style-type: none;
-    padding: 0;
     margin: 0;
+    padding: 0;
     display: flex;
-    justify-content: flex-end;
+    justify-content: flex-end; /* Align the items to the right */
 }
 
+/* Navigation list items */
 nav ul li {
     display: inline-block;
-    margin-left: 20px;
+    margin-left: 20px; /* Space between menu items */
 }
 
+/* Links inside the nav */
 nav ul li a {
     color: white;
     text-decoration: none;
