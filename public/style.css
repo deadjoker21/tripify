@@ -6,21 +6,24 @@ body {
     box-sizing: border-box;
 }
 
+/* Ensure the header has a background and padding */
+header {
+    background-color: #003580; /* Maintain the header color */
+    padding: 20px 0; /* Add padding to the top and bottom of the header */
+    width: 100%;
+}
+
+/* Container to manage layout and spacing */
 .container {
     display: flex;
-    justify-content: space-between; /* This will push the logo to the left and the nav to the right */
-    align-items: center; /* Vertically centers items */
+    justify-content: space-between; /* Push logo to the left and nav to the right */
+    align-items: center; /* Vertically center both logo and nav */
     max-width: 1200px; /* Limit maximum width for large screens */
     margin: 0 auto; /* Center the container horizontally */
     padding: 0 20px; /* Add some padding to prevent collision with the screen sides */
 }
-}
 
-header {
-    background-color: #003580;
-    padding: 20px 0;
-}
-
+/* Logo styling */
 header .logo a {
     color: white;
     font-size: 24px;
@@ -34,7 +37,7 @@ nav ul {
     margin: 0;
     padding: 0;
     display: flex;
-    justify-content: flex-end; /* Align the items to the right */
+    justify-content: flex-end;
 }
 
 /* Navigation list items */
