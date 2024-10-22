@@ -16,25 +16,26 @@ const correctPassword = 'securepassword'; // Replace with your password
 app.post('/get-data', async (req, res) => {
     const { password } = req.body;
 
+    console.log('Password received:', password);
+
     if (password !== correctPassword) {
+        console.log('Invalid password');
         return res.status(403).json({ error: 'Invalid password' });
     }
 
     const filePath = path.join(__dirname, 'public', 'SearchData.xlsx');
 
-    // Check if the file exists
     if (!fs.existsSync(filePath)) {
+        console.log('File not found:', filePath);
         return res.status(404).json({ error: 'File not found' });
     }
 
-    // Load the Excel file and read its contents
     try {
         const workbook = new ExcelJS.Workbook();
         await workbook.xlsx.readFile(filePath);
         const worksheet = workbook.getWorksheet(1);
         const data = [];
 
-        // Assuming the first row contains headers, we'll skip it
         worksheet.eachRow((row, rowNumber) => {
             if (rowNumber > 1) {
                 data.push({
