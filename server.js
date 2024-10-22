@@ -1,22 +1,18 @@
 const express = require('express');
 const app = express();
-const path = require('path');
 
-// Serve static files (if necessary)
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Default route for `/` - handle base URL
+// Route for the root URL '/'
 app.get('/', (req, res) => {
-  res.send('Hello, World! Your app is running.');
+  res.send('Hello, World! This is your root endpoint.');
 });
 
-// Example route to handle `/get-data`
+// Example route for '/get-data'
 app.get('/get-data', (req, res) => {
-  res.send('This will be your data response.');
+  res.send('This is the /get-data endpoint.');
 });
 
 // Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
