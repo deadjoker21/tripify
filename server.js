@@ -10,6 +10,7 @@ const app = express();
 console.log('GOOGLE_CLOUD_PROJECT:', process.env.GOOGLE_CLOUD_PROJECT);
 console.log('GOOGLE_CLOUD_BUCKET:', process.env.GOOGLE_CLOUD_BUCKET);
 console.log('GOOGLE_CLOUD_CLIENT_EMAIL:', process.env.GOOGLE_CLOUD_CLIENT_EMAIL);
+console.log('GOOGLE_CLOUD_PRIVATE_KEY:', process.env.GOOGLE_CLOUD_PRIVATE_KEY ? 'Loaded successfully' : 'Missing');
 
 // Ensure private key is being loaded
 if (!process.env.GOOGLE_CLOUD_PRIVATE_KEY) {
