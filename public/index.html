@@ -77,7 +77,7 @@
 
     <!-- JavaScript -->
     <script>
-  // Show the password prompt when "Contact" button is clicked
+    // Show the password prompt when "Contact" button is clicked
     document.getElementById('contactButton').addEventListener('click', () => {
         document.getElementById('passwordSection').style.display = 'block';
     });
@@ -110,8 +110,8 @@
                 // Display the fetched data in a table
                 let html = '<table border="1"><tr><th>Destination</th><th>Date</th><th>Guests</th></tr>';
                 data.forEach(row => {
-                    const formattedDate = new Date(row.date).toISOString().split('T')[0];
-                    html += `<tr><td>${row.destination}</td><td>${row.date}</td><td>${row.guests}</td></tr>`;
+                    const formattedDate = new Date(row.date).toISOString().split('T')[0]; // Extracting only the date part
+                    html += `<tr><td>${row.destination}</td><td>${formattedDate}</td><td>${row.guests}</td></tr>`;
                 });
                 html += '</table>';
                 document.getElementById('dataDisplay').innerHTML = html;
